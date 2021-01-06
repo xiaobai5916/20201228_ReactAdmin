@@ -1,0 +1,77 @@
+[
+    {
+        "key": "1",
+        "name": "Screem",
+        "platform": "苹果",
+        "version": "10.3.4.5654",
+        "upgradeNum": 500,
+        "creator": "Screem",
+        "createdAt": "2014-12-24 23:12:00",
+        "values": [
+            {
+                "key": "10",
+                "name": "小明",
+                "age": 18,
+                "address": "江西"
+            },
+            {
+                "key": "9",
+                "name": "小红",
+                "age": 20,
+                "address": "浙江"
+            },
+            {
+                "key": "8",
+                "name": "小张",
+                "age": 22,
+                "address": "杭州"
+            }
+        ]
+    },
+    {
+        "key": "2",
+        "name": "Tom",
+        "platform": "小米",
+        "version": "6.3.2312",
+        "upgradeNum": 500,
+        "creator": "Tom",
+        "createdAt": "2014-12-24 23:12:00",
+        "values": [
+            {
+                "key": "7",
+                "name": "小李",
+                "age": 24,
+                "address": "广东"
+            },
+            {
+                "key": "6",
+                "name": "小白",
+                "age": 28,
+                "address": "深圳"
+            },
+            {
+                "key": "5",
+                "name": "小刘",
+                "age": 32,
+                "address": "广西"
+            }
+        ]
+    },
+    {
+        "key": "3",
+        "name": "Jerry",
+        "platform": "安卓",
+        "version": "16.3.2312",
+        "upgradeNum": 500,
+        "creator": "Jerry",
+        "createdAt": "2014-12-24 23:12:00",
+        "values": [
+            {
+                "key": "4",
+                "name": "小七",
+                "age": 10,
+                "address": "北京"
+            }
+        ]
+    }
+]

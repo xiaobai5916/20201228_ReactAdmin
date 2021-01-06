@@ -1,0 +1,15 @@
+.logo {
+    width: 175px;
+    color: #fff;
+  }
+  
+  .App-logo {
+    height: 40px;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
