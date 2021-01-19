@@ -1,7 +1,7 @@
 import './Side.css';
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
+// import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;

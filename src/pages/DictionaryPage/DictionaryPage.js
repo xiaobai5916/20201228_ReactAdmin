@@ -1,92 +1,12 @@
 import './DictionaryPage.css';
 import React from 'react';
-
-import { 
-    Table, 
-    Badge, 
-    Menu, 
-    Dropdown, 
-    Space, 
-    Breadcrumb, 
-    Button
-} from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Table, Breadcrumb } from 'antd';
 
 import data from './data.json';
-import Dialog from './components/Dialog'
+import Dialog from './components/Dialog';
+import DictionaryTable from './components/DictionaryTable'
 
-const menu = (
-  <Menu>
-    <Menu.Item>Action 1</Menu.Item>
-    <Menu.Item>Action 2</Menu.Item>
-  </Menu>
-);
 
-function ExpandedRowRender(props) {
-    const values = props.values
-    const columns = [
-      { title: 'Name', dataIndex: 'name', key: 'name' },
-      { title: 'Age', dataIndex: 'age', key: 'age' },
-      { title: 'Address', dataIndex: 'address', key: 'address' },
-      {
-        title: 'Status',
-        key: 'state',
-        render: () => (
-          <span>
-            <Badge status="success" />
-            Finished
-          </span>
-        ),
-      },
-      {
-        title: 'Action',
-        dataIndex: 'operation',
-        key: 'operation',
-        render: () => (
-          <Space size="middle">
-            <a>Pause</a>
-            <a>Stop</a>
-            <Dropdown overlay={menu}>
-              <a>
-                More <DownOutlined />
-              </a>
-            </Dropdown>
-          </Space>
-        ),
-      },
-    ];
-
-    // const datas = [];
-    // for (let i = 0; i < 120; ++i) {
-    //   datas.push({
-    //     key: i,
-    //     date: '2014-12-24 23:12:00',
-    //     name: 'This is production name',
-    //     upgradeNum: 'Upgraded: 56',
-    //   });
-    // }
-
-    function showTotal(total) {
-      return `共 ${total} 条`;
-    }
-
-    return (
-      <div>
-        <Table
-          columns={columns} 
-          dataSource={values} 
-          pagination={{ 
-            position: ['none', 'bottomRight'], 
-            defaultCurrent: 1,
-            defaultPageSize: 10,
-            // current: 4,
-            // pageSize: 10,
-            showTotal: showTotal
-          }} 
-        /> 
-      </div>
-    )
-  };
 
 class DictionaryPage extends React.Component {
   
@@ -101,7 +21,7 @@ class DictionaryPage extends React.Component {
       { title: 'Action', key: 'operation', render: () => <a>Publish</a> },
     ],
     data: data,
-    display: false,
+    tableDisplay: false,
     values: [],
     visible: false
   }
@@ -111,21 +31,21 @@ class DictionaryPage extends React.Component {
     console.log('当前点击行的数据：', data)
     console.log(data.key)
     if(data.values && data.values.length > 0) {
-      this.state.values = data.values
-      this.setState({ display: true })
+      this.setState({ 
+        tableDisplay: true,
+        values: data.values
+      })
     }else{
-      this.setState({ display: false })
+      this.setState({ 
+        tableDisplay: false,
+        valuse: []
+      })
     }
-    // console.log(this.state.display)
   }
   
   // 双击行，关闭一级菜单下的二级菜单表格
   doubleClickClose = () => {
-    this.setState({ display: false })
-  }
-
-  addMenu = () => {
-    
+    this.setState({ tableDisplay: false })
   }
 
   render() {
@@ -154,21 +74,20 @@ class DictionaryPage extends React.Component {
           className="components-table-demo-nested"
           showHeader="false"
           columns={this.state.columns}
-          // expandable={{ expandedRowRender }}
           selections={false}
           dataSource={this.state.data}
           pagination={{ 
             position: ['none', 'bottomRight'], 
             defaultCurrent: 1,
             defaultPageSize: 10,
-            // current: 3, 
-            // pageSize: 5,
             showTotal: total => `共 ${total} 条`
           }}
         />
-        <div style={{display: this.state.display ? 'block' : 'none'}}>
-          <ExpandedRowRender values={this.state.values} />
-        </div>
+        {
+          this.state.tableDisplay ? (
+            <DictionaryTable values={this.state.values} visible={this.state.visible}/>
+          ) : null
+        }
       </div>
     );
   }

@@ -1,3 +1,4 @@
+import React from 'react';
 import './Head.css';
 import logo from '../../logo.svg';
 import { Layout, Menu } from 'antd';

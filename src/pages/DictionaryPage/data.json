@@ -12,7 +12,45 @@
                 "key": "10",
                 "name": "小明",
                 "age": 18,
-                "address": "江西"
+                "address": "江西",
+                "values": [
+                    {
+                        "key": "11",
+                        "name": "小黑",
+                        "age": 22,
+                        "address": "黑龙江",
+                        "values": [
+                            {
+                                "key": "13",
+                                "name": "隔壁老王",
+                                "age": 28,
+                                "address": "江西",
+                                "values": [
+                                    {
+                                        "key": "14",
+                                        "name": "我是第五级",
+                                        "age": 555,
+                                        "address": "余杭",
+                                        "values": [
+                                            {
+                                                "key": "15",
+                                                "name": "我是六级",
+                                                "age": 666,
+                                                "address": "萧山"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "key": "12",
+                        "name": "小白",
+                        "age": 30,
+                        "address": "哈尔滨"
+                    }
+                ]
             },
             {
                 "key": "9",
