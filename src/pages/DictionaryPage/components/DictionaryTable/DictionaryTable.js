@@ -18,7 +18,7 @@ const menu = (
 
 class DictionaryTable extends React.Component {
   state = {
-    tableFlag: this.props.visible,
+    tableFlag: false,
     values: [],
     columns: [
       { title: 'Name', dataIndex: 'name', key: 'name' },

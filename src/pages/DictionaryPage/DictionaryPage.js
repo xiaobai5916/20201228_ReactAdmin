@@ -23,7 +23,6 @@ class DictionaryPage extends React.Component {
     data: data,
     tableDisplay: false,
     values: [],
-    visible: false
   }
 
   // 点击当前行,获取当前行所有信息
@@ -38,7 +37,7 @@ class DictionaryPage extends React.Component {
     }else{
       this.setState({ 
         tableDisplay: false,
-        valuse: []
+        values: []
       })
     }
   }
@@ -85,7 +84,7 @@ class DictionaryPage extends React.Component {
         />
         {
           this.state.tableDisplay ? (
-            <DictionaryTable values={this.state.values} visible={this.state.visible}/>
+            <DictionaryTable values={this.state.values}/>
           ) : null
         }
       </div>
