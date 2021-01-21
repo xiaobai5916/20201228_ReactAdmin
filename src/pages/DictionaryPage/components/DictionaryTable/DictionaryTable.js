@@ -18,7 +18,7 @@ const menu = (
 
 class DictionaryTable extends React.Component {
   state = {
-    tableFlag: false,
+    tableFlag: this.props.tableFlag,
     values: [],
     columns: [
       { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -58,14 +58,17 @@ class DictionaryTable extends React.Component {
   }
 
   tableDisplay = (data) => {
-    console.log('点击当前行', data)
-    if (data.values && data.values.length > 0) {
+    console.log('点击当前行data', data);
+    localStorage.setItem('level', data.level)
+    if(data.values && data.values.length > 0 ) {
       this.setState({
+        level: data.level,
         values: data.values,
         tableFlag: true
       })
     }else{
       this.setState({
+        level: data.level,
         values: [],
         tableFlag: false
       })
@@ -78,8 +81,9 @@ class DictionaryTable extends React.Component {
 
   render () {
     const { values } = this.props;
-    console.log(this.state)
-    console.log(this.props)
+    console.log('table this.props', this.props)
+    console.log('table this.state', this.state)
+    console.log(localStorage.getItem('level'))
     return (
       <div>
         <Table
@@ -102,8 +106,8 @@ class DictionaryTable extends React.Component {
           }} 
         /> 
         {
-          this.state.tableFlag ? (
-            <DictionaryTable values={this.state.values} />
+          this.state.tableFlag && localStorage.getItem('level') >= this.state.level ? (
+            <DictionaryTable values={this.state.values} level={this.state.level} />
           ) : null
         }
       </div>

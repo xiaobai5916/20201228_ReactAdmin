@@ -1,5 +1,6 @@
 [
     {
+        "level": 0,
         "key": "1",
         "name": "Screem",
         "platform": "苹果",
@@ -9,30 +10,35 @@
         "createdAt": "2014-12-24 23:12:00",
         "values": [
             {
+                "level": 1,
                 "key": "10",
                 "name": "小明",
                 "age": 18,
                 "address": "江西",
                 "values": [
                     {
+                        "level": 2,
                         "key": "11",
                         "name": "小黑",
                         "age": 22,
                         "address": "黑龙江",
                         "values": [
                             {
+                                "level": 3,
                                 "key": "13",
                                 "name": "隔壁老王",
                                 "age": 28,
                                 "address": "江西",
                                 "values": [
                                     {
+                                        "level": 4,
                                         "key": "14",
                                         "name": "我是第五级",
                                         "age": 555,
                                         "address": "余杭",
                                         "values": [
                                             {
+                                                "level": 5,
                                                 "key": "15",
                                                 "name": "我是六级",
                                                 "age": 666,
@@ -45,20 +51,33 @@
                         ]
                     },
                     {
+                        "level": 2,
                         "key": "12",
                         "name": "小白",
                         "age": 30,
-                        "address": "哈尔滨"
+                        "address": "哈尔滨",
+                        "values": [
+                            {
+                                
+                                "level": 3,
+                                "key": "16",
+                                "name": "小白2222",
+                                "age": 28,
+                                "address": "江西"
+                            }
+                        ]
                     }
                 ]
             },
             {
+                "level": 1,
                 "key": "9",
                 "name": "小红",
                 "age": 20,
                 "address": "浙江"
             },
             {
+                "level": 1,
                 "key": "8",
                 "name": "小张",
                 "age": 22,
@@ -67,6 +86,7 @@
         ]
     },
     {
+        "level": 0,
         "key": "2",
         "name": "Tom",
         "platform": "小米",
@@ -76,18 +96,21 @@
         "createdAt": "2014-12-24 23:12:00",
         "values": [
             {
+                "level": 1,
                 "key": "7",
                 "name": "小李",
                 "age": 24,
                 "address": "广东"
             },
             {
+                "level": 1,
                 "key": "6",
                 "name": "小白",
                 "age": 28,
                 "address": "深圳"
             },
             {
+                "level": 1,
                 "key": "5",
                 "name": "小刘",
                 "age": 32,
@@ -96,6 +119,7 @@
         ]
     },
     {
+        "level": 0,
         "key": "3",
         "name": "Jerry",
         "platform": "安卓",
@@ -105,6 +129,7 @@
         "createdAt": "2014-12-24 23:12:00",
         "values": [
             {
+                "level": 1,
                 "key": "4",
                 "name": "小七",
                 "age": 10,

@@ -1,12 +1,19 @@
 import './DictionaryPage.css';
 import React from 'react';
-import { Table, Breadcrumb } from 'antd';
+import { Table, Breadcrumb, Button, Space, Dropdown, Menu } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 import data from './data.json';
 import Dialog from './components/Dialog';
 import DictionaryTable from './components/DictionaryTable'
 
 
+const menu = (
+  <Menu>
+    <Menu.Item>Action 1</Menu.Item>
+    <Menu.Item>Action 2</Menu.Item>
+  </Menu>
+);
 
 class DictionaryPage extends React.Component {
   
@@ -18,24 +25,53 @@ class DictionaryPage extends React.Component {
       { title: 'Upgraded', dataIndex: 'upgradeNum', key: 'upgradeNum' },
       { title: 'Creator', dataIndex: 'creator', key: 'creator' },
       { title: 'Date', dataIndex: 'createdAt', key: 'createdAt' },
-      { title: 'Action', key: 'operation', render: () => <a>Publish</a> },
+      { 
+        title: 'Action', 
+        key: 'operation', 
+        render: () => (
+          <Space size="middle">
+            <Button onClick={this.del}>
+              删除
+            </Button>
+            <Button onClick={this.edit}>
+              编辑
+            </Button>
+            <Dropdown overlay={menu}>
+              <a>
+                More <DownOutlined />
+              </a>
+            </Dropdown>
+          </Space>
+        ),
+      }
     ],
     data: data,
     tableDisplay: false,
     values: [],
+    level: 0
+  }
+
+  del = (params) => {
+    console.log(params)
+  }
+
+  edit = (params) => {
+    console.log(params)
   }
 
   // 点击当前行,获取当前行所有信息
   tableDisplay = (data) => {
-    console.log('当前点击行的数据：', data)
-    console.log(data.key)
+    console.log('当前点击行的数据data：', data)
+    localStorage.setItem('level', data.level)
     if(data.values && data.values.length > 0) {
       this.setState({ 
+        level: data.level,
         tableDisplay: true,
         values: data.values
       })
     }else{
       this.setState({ 
+        level: data.level,
         tableDisplay: false,
         values: []
       })
@@ -48,6 +84,8 @@ class DictionaryPage extends React.Component {
   }
 
   render() {
+    console.log('page this.state', this.state)
+    console.log(localStorage.getItem('level'))
     return (
       <div>
         <div className="clearfix">
@@ -84,7 +122,7 @@ class DictionaryPage extends React.Component {
         />
         {
           this.state.tableDisplay ? (
-            <DictionaryTable values={this.state.values}/>
+            <DictionaryTable values={this.state.values} level={this.state.level} />
           ) : null
         }
       </div>
