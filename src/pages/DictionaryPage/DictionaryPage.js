@@ -1,19 +1,10 @@
 import './DictionaryPage.css';
 import React from 'react';
-import { Table, Breadcrumb, Button, Space, Dropdown, Menu } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Table, Breadcrumb, Button, Space } from 'antd';
 
 import data from './data.json';
 import Dialog from './components/Dialog';
 import DictionaryTable from './components/DictionaryTable'
-
-
-const menu = (
-  <Menu>
-    <Menu.Item>Action 1</Menu.Item>
-    <Menu.Item>Action 2</Menu.Item>
-  </Menu>
-);
 
 class DictionaryPage extends React.Component {
   
@@ -28,19 +19,14 @@ class DictionaryPage extends React.Component {
       { 
         title: 'Action', 
         key: 'operation', 
-        render: () => (
+        render: (record) => (
           <Space size="middle">
-            <Button onClick={this.del}>
+            <Button type="danger" onClick={event => {this.del(event, record)}}>
               删除
             </Button>
-            <Button onClick={this.edit}>
+            <Button onClick={event => {this.edit(event, record)}}>
               编辑
             </Button>
-            <Dropdown overlay={menu}>
-              <a>
-                More <DownOutlined />
-              </a>
-            </Dropdown>
           </Space>
         ),
       }
@@ -51,12 +37,14 @@ class DictionaryPage extends React.Component {
     level: 0
   }
 
-  del = (params) => {
-    console.log(params)
+  del = (e, data) => {
+    e.stopPropagation();
+    console.log(e, data)
   }
 
-  edit = (params) => {
-    console.log(params)
+  edit = (e, data) => {
+    e.stopPropagation();
+    console.log(e, data)
   }
 
   // 点击当前行,获取当前行所有信息
@@ -85,7 +73,6 @@ class DictionaryPage extends React.Component {
 
   render() {
     console.log('page this.state', this.state)
-    console.log(localStorage.getItem('level'))
     return (
       <div>
         <div className="clearfix">

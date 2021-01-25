@@ -1,20 +1,9 @@
 import React from 'react';
 import { 
     Table, 
-    Badge, 
-    Menu, 
-    Dropdown, 
     Space, 
+    Button
 } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-
-const menu = (
-  <Menu>
-    <Menu.Item>Action 1</Menu.Item>
-    <Menu.Item>Action 2</Menu.Item>
-  </Menu>
-);
-
 
 class DictionaryTable extends React.Component {
   state = {
@@ -24,33 +13,32 @@ class DictionaryTable extends React.Component {
       { title: 'Name', dataIndex: 'name', key: 'name' },
       { title: 'Age', dataIndex: 'age', key: 'age' },
       { title: 'Address', dataIndex: 'address', key: 'address' },
-      {
-        title: 'Status',
-        key: 'state',
-        render: () => (
-          <span>
-            <Badge status="success" />
-            Finished
-          </span>
-        ),
-      },
-      {
-        title: 'Action',
-        dataIndex: 'operation',
-        key: 'operation',
-        render: () => (
+      { title: 'Status', dataIndex: 'state', key: 'state' },
+      { 
+        title: 'Action', 
+        key: 'operation', 
+        render: (record) => (
           <Space size="middle">
-            <a>Pause</a>
-            <a>Stop</a>
-            <Dropdown overlay={menu}>
-              <a>
-                More <DownOutlined />
-              </a>
-            </Dropdown>
+            <Button type="danger" onClick={event => {this.del(event, record)}}>
+              删除
+            </Button>
+            <Button onClick={event => {this.edit(event, record)}}>
+              编辑
+            </Button>
           </Space>
         ),
-      },
+      }
     ]
+  }
+
+  del = (e, data) => {
+    e.stopPropagation();
+    console.log(e, data)
+  }
+
+  edit = (e, data) => {
+    e.stopPropagation();
+    console.log(e, data)
   }
 
   showTotal = (total) => {
@@ -83,7 +71,6 @@ class DictionaryTable extends React.Component {
     const { values } = this.props;
     console.log('table this.props', this.props)
     console.log('table this.state', this.state)
-    console.log(localStorage.getItem('level'))
     return (
       <div>
         <Table
