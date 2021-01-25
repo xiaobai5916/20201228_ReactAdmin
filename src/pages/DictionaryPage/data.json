@@ -100,7 +100,16 @@
                 "key": "7",
                 "name": "小李",
                 "age": 24,
-                "address": "广东"
+                "address": "广东",
+                "values": [
+                    {
+                        "level": 2,
+                        "key": "10",
+                        "name": "小明",
+                        "age": 18,
+                        "address": "江西"
+                    }
+                ]
             },
             {
                 "level": 1,

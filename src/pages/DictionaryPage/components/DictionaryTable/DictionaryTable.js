@@ -4,11 +4,13 @@ import {
     Space, 
     Button
 } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 class DictionaryTable extends React.Component {
   state = {
     tableFlag: this.props.tableFlag,
     values: [],
+    tracks: [],
     columns: [
       { title: 'Name', dataIndex: 'name', key: 'name' },
       { title: 'Age', dataIndex: 'age', key: 'age' },
@@ -45,9 +47,21 @@ class DictionaryTable extends React.Component {
     return `共 ${total} 条`;
   }
 
-  tableDisplay = (data) => {
-    console.log('点击当前行data', data);
+  tableDisplay = (data, index) => {
+    console.log('当前行level', data.level);
+    console.log('父级level', this.props.level);
     localStorage.setItem('level', data.level)
+    // 轨迹
+    for(let i = 0; i< window.track.length; i++){
+      if( window.track[i].level >= data.level){
+        window.track.splice( i, 1 )
+        i--;
+      }
+    }
+    window.track.push({level: data.level, name: data.name, index});
+    this.setState({tracks: window.track})
+    console.log(window.track,'new track')
+    
     if(data.values && data.values.length > 0 ) {
       this.setState({
         level: data.level,
@@ -69,14 +83,12 @@ class DictionaryTable extends React.Component {
 
   render () {
     const { values } = this.props;
-    console.log('table this.props', this.props)
-    console.log('table this.state', this.state)
     return (
       <div>
         <Table
-          onRow={record => {
+          onRow={(record, index) => {
             return {
-              onClick: this.tableDisplay.bind(this, record), // 点击行,获取当前行所有信息
+              onClick: this.tableDisplay.bind(this, record, index), // 点击行,获取当前行所有信息
               onDoubleClick: this.doubleClickClose,  // 双击行，关闭二级菜单
               // onContextMenu: event => {},
               // onMouseEnter: event => {}, // 鼠标移入行
@@ -94,7 +106,7 @@ class DictionaryTable extends React.Component {
         /> 
         {
           this.state.tableFlag && localStorage.getItem('level') >= this.state.level ? (
-            <DictionaryTable values={this.state.values} level={this.state.level} />
+            <DictionaryTable values={this.state.values} tracks={this.state.tracks} data={this.props.data} level={this.state.level} />
           ) : null
         }
       </div>
