@@ -4,20 +4,17 @@ import {
     Space, 
     Button
 } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+// import axios from 'axios';
 
 class DictionaryTable extends React.Component {
   state = {
     tableFlag: this.props.tableFlag,
     values: [],
-    tracks: [],
     columns: [
-      { title: 'Name', dataIndex: 'name', key: 'name' },
-      { title: 'Age', dataIndex: 'age', key: 'age' },
-      { title: 'Address', dataIndex: 'address', key: 'address' },
-      { title: 'Status', dataIndex: 'state', key: 'state' },
+      { title: '字典名称', dataIndex: 'dictName', key: 'dictName' },
+      { title: '字典key', dataIndex: 'dictKey', key: 'dictKey' },
       { 
-        title: 'Action', 
+        title: '操作', 
         key: 'operation', 
         render: (record) => (
           <Space size="middle">
@@ -30,7 +27,9 @@ class DictionaryTable extends React.Component {
           </Space>
         ),
       }
-    ]
+    ],
+    dataBackUp:'',
+    idx:[]
   }
 
   del = (e, data) => {
@@ -48,20 +47,20 @@ class DictionaryTable extends React.Component {
   }
 
   tableDisplay = (data, index) => {
-    console.log('当前行level', data.level);
-    console.log('父级level', this.props.level);
     localStorage.setItem('level', data.level)
-    // 轨迹
+    let idx = [];
     for(let i = 0; i< window.track.length; i++){
       if( window.track[i].level >= data.level){
         window.track.splice( i, 1 )
+        idx.splice( i, 1 )
         i--;
       }
     }
     window.track.push({level: data.level, name: data.name, index});
-    this.setState({tracks: window.track})
-    console.log(window.track,'new track')
-    
+    for(var i = 0;i<window.track.length;i++){
+      idx.push(window.track[i].index);
+    }
+    this.setState({ idx })
     if(data.values && data.values.length > 0 ) {
       this.setState({
         level: data.level,
@@ -81,11 +80,29 @@ class DictionaryTable extends React.Component {
     this.setState({ tableFlag: false })
   }
 
+  componentDidMount(){
+    this.setState({dataBackUp: JSON.stringify(this.props.data), idx: JSON.parse(JSON.stringify(this.props.idx))})
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.idx.length>this.state.idx.length) this.setState({idx: JSON.parse(JSON.stringify(nextProps.idx))})
+    if(JSON.stringify(nextProps.data) !== this.state.dataBackUp){
+      let newValues = nextProps.data;
+      if(this.state.idx.length !== 0){
+        this.state.idx.forEach((item, index)=>{
+          if(index < this.state.idx.length){
+            newValues = newValues[item].values
+          }})
+        if(this.state.tableFlag) this.setState({values:JSON.parse(JSON.stringify(newValues))})
+      }
+    }
+  }
   render () {
     const { values } = this.props;
     return (
       <div>
         <Table
+          rowKey={record => record.dictKey}
           onRow={(record, index) => {
             return {
               onClick: this.tableDisplay.bind(this, record, index), // 点击行,获取当前行所有信息
@@ -106,7 +123,7 @@ class DictionaryTable extends React.Component {
         /> 
         {
           this.state.tableFlag && localStorage.getItem('level') >= this.state.level ? (
-            <DictionaryTable values={this.state.values} tracks={this.state.tracks} data={this.props.data} level={this.state.level} />
+            <DictionaryTable values={this.state.values} idx={this.state.idx} data={this.props.data} level={this.state.level} />
           ) : null
         }
       </div>

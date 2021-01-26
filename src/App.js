@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import Head from './pages/Head'
-// import Side from './pages/Side'
+import Side from './pages/Side'
 import DictionaryPage from './pages/DictionaryPage'
 import { Layout } from 'antd';
 
@@ -12,7 +12,7 @@ function App() {
     <Layout>
       <Head />
       <Layout>
-        {/* <Side /> */}
+        <Side />
         <Layout style={{ padding: '0 24px 24px' }}>
           <Content
             className="site-layout-background"

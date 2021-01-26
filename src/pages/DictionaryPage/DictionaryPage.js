@@ -1,7 +1,7 @@
 import './DictionaryPage.css';
 import React from 'react';
 import { Table, Breadcrumb, Button, Space } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 import data from './data.json';
 import Dialog from './components/Dialog';
@@ -11,20 +11,20 @@ window.track = [];// 轨迹
 class DictionaryPage extends React.Component {
   state = {
     columns: [
-      { title: 'Name', dataIndex: 'name', key: 'name' },
-      { title: 'Platform', dataIndex: 'platform', key: 'platform' },
-      { title: 'Version', dataIndex: 'version', key: 'version' },
-      { title: 'Upgraded', dataIndex: 'upgradeNum', key: 'upgradeNum' },
-      { title: 'Creator', dataIndex: 'creator', key: 'creator' },
-      { title: 'Date', dataIndex: 'createdAt', key: 'createdAt' },
+      { title: '字典名称', dataIndex: 'dictName', key: 'dictName' },
+      { title: '字典key', dataIndex: 'dictKey', key: 'dictKey' },
+      { title: '积分类型', dataIndex: 'dictPointType', key: 'dictPointType' },
+      { title: '字典类型', dataIndex: 'dictType', key: 'dictType' },
+      { title: '字典描述', dataIndex: 'desc_', key: 'desc_' },
+      { title: '机构编码', dataIndex: 'orgCode', key: 'orgCode' },
       { 
-        title: 'Action', 
+        title: '操作', 
         key: 'operation', 
         render: (record) => (
           <Space size="middle">
-            <Button type="danger" onClick={event => {this.del(event, record)}}>
+            {/* <Button type="danger" onClick={event => {this.del(event, record)}}>
               删除
-            </Button>
+            </Button> */}
             <Button onClick={event => {this.edit(event, record)}}>
               编辑
             </Button>
@@ -36,7 +36,8 @@ class DictionaryPage extends React.Component {
     tableDisplay: false,
     values: [],
     level: 0,
-    tracks: []
+    idx: [0],
+    list: []
   }
 
   del = (e, data) => {
@@ -51,11 +52,10 @@ class DictionaryPage extends React.Component {
 
   // 点击当前行,获取当前行所有信息
   tableDisplay = (data, index) => {
-    console.log('当前点击行的数据data：', data)
     localStorage.setItem('level', data.level)
-    window.track = [];// 轨迹
+    window.track = [];
     window.track.push({level: data.level, name: data.name, index});
-    this.setState({track: window.track})
+    this.setState({idx: JSON.parse(JSON.stringify([index]))})
     if(data.values && data.values.length > 0) {
       this.setState({ 
         level: data.level,
@@ -76,8 +76,19 @@ class DictionaryPage extends React.Component {
     this.setState({ tableDisplay: false })
   }
 
+  componentWillMount() {
+    axios.get('http://192.168.43.254:8099/dict/getParentDict?current=1&pageSize=10')
+      .then((res) => {
+        console.log('res', res)
+        this.setState({
+          list: res.data.data.list,
+          total: res.data.data.total
+        })
+        console.log('list', this.state.list)
+      })
+  }
+
   render() {
-    console.log('page this.state', this.state.data,7777)
     console.log(localStorage.getItem('level'))
     return (
       <div>
@@ -89,15 +100,16 @@ class DictionaryPage extends React.Component {
           </Breadcrumb>
           <div className="fr" style={{ marginBottom: '16px' }}>
             <Dialog 
-              addHandle = {(data,trackArr)=>{
+              addHandle = {(data)=>{
                 const newData = JSON.parse(JSON.stringify(data))
-                console.log(this.state.data === newData,123)
-                this.setState({ data: newData })
+                let newValues = data[this.state.idx[0]].values.slice()
+                this.setState({ data: newData, values: newValues })
               }}
             />
           </div>
         </div>
         <Table
+          rowKey={record => record.dictKey}
           onRow={(record, index) => {
             return {
               onClick: this.tableDisplay.bind(this, record, index), // 点击行,获取当前行所有信息
@@ -121,7 +133,7 @@ class DictionaryPage extends React.Component {
         />
         {
           this.state.tableDisplay ? (
-            <DictionaryTable values={this.state.values} tracks={this.state.tracks} data={data} level={this.state.level} />
+            <DictionaryTable values={this.state.values} idx={this.state.idx} data={this.state.data} level={this.state.level} />
           ) : null
         }
       </div>

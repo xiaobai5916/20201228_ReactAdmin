@@ -1,46 +1,45 @@
 [
     {
         "level": 0,
-        "key": "1",
-        "name": "Screem",
-        "platform": "苹果",
-        "version": "10.3.4.5654",
-        "upgradeNum": 500,
-        "creator": "Screem",
-        "createdAt": "2014-12-24 23:12:00",
+        "dictKey": "1",
+        "dictName": "交易类",
+        "dictPointType": "苹果",
+        "dictType": "10.3.4.5654",
+        "desc_": "我是苹果苹果苹果",
+        "orgCode": "001",
         "values": [
             {
                 "level": 1,
-                "key": "10",
-                "name": "小明",
+                "dictKey": "10",
+                "dictName": "小明",
                 "age": 18,
                 "address": "江西",
                 "values": [
                     {
                         "level": 2,
-                        "key": "11",
-                        "name": "小黑",
+                        "dictKey": "11",
+                        "dictName": "小黑",
                         "age": 22,
                         "address": "黑龙江",
                         "values": [
                             {
                                 "level": 3,
-                                "key": "13",
-                                "name": "隔壁老王",
+                                "dictKey": "13",
+                                "dictName": "隔壁老王",
                                 "age": 28,
                                 "address": "江西",
                                 "values": [
                                     {
                                         "level": 4,
-                                        "key": "14",
-                                        "name": "我是第五级",
+                                        "dictKey": "14",
+                                        "dictName": "我是第五级",
                                         "age": 555,
                                         "address": "余杭",
                                         "values": [
                                             {
                                                 "level": 5,
-                                                "key": "15",
-                                                "name": "我是六级",
+                                                "dictKey": "15",
+                                                "dictName": "我是六级",
                                                 "age": 666,
                                                 "address": "萧山"
                                             }
@@ -52,16 +51,16 @@
                     },
                     {
                         "level": 2,
-                        "key": "12",
-                        "name": "小白",
+                        "dictKey": "12",
+                        "dictName": "小白",
                         "age": 30,
                         "address": "哈尔滨",
                         "values": [
                             {
                                 
                                 "level": 3,
-                                "key": "16",
-                                "name": "小白2222",
+                                "dictKey": "16",
+                                "dictName": "小白2222",
                                 "age": 28,
                                 "address": "江西"
                             }
@@ -71,15 +70,15 @@
             },
             {
                 "level": 1,
-                "key": "9",
-                "name": "小红",
+                "dictKey": "9",
+                "dictName": "小红",
                 "age": 20,
                 "address": "浙江"
             },
             {
                 "level": 1,
-                "key": "8",
-                "name": "小张",
+                "dictKey": "8",
+                "dictName": "小张",
                 "age": 22,
                 "address": "杭州"
             }
@@ -87,25 +86,24 @@
     },
     {
         "level": 0,
-        "key": "2",
-        "name": "Tom",
-        "platform": "小米",
-        "version": "6.3.2312",
-        "upgradeNum": 500,
-        "creator": "Tom",
-        "createdAt": "2014-12-24 23:12:00",
+        "dictKey": "2",
+        "dictName": "存款类",
+        "dictPointType": "小米",
+        "dictType": "6.3.2312",
+        "desc_": "我是小米小米",
+        "orgCode": "002",
         "values": [
             {
                 "level": 1,
-                "key": "7",
-                "name": "小李",
+                "dictKey": "7",
+                "dictName": "小李",
                 "age": 24,
                 "address": "广东",
                 "values": [
                     {
                         "level": 2,
-                        "key": "10",
-                        "name": "小明",
+                        "dictKey": "10",
+                        "dictName": "小明",
                         "age": 18,
                         "address": "江西"
                     }
@@ -113,15 +111,15 @@
             },
             {
                 "level": 1,
-                "key": "6",
-                "name": "小白",
+                "dictKey": "6",
+                "dictName": "小白",
                 "age": 28,
                 "address": "深圳"
             },
             {
                 "level": 1,
-                "key": "5",
-                "name": "小刘",
+                "dictKey": "5",
+                "dictName": "小刘",
                 "age": 32,
                 "address": "广西"
             }
@@ -129,18 +127,17 @@
     },
     {
         "level": 0,
-        "key": "3",
-        "name": "Jerry",
-        "platform": "安卓",
-        "version": "16.3.2312",
-        "upgradeNum": 500,
-        "creator": "Jerry",
-        "createdAt": "2014-12-24 23:12:00",
+        "dictKey": "3",
+        "dictName": "贷款类",
+        "dictPointType": "安卓",
+        "dictType": "16.3.2312",
+        "desc_": "我是安卓安卓机",
+        "orgCode": "003",
         "values": [
             {
                 "level": 1,
-                "key": "4",
-                "name": "小七",
+                "dictKey": "4",
+                "dictName": "小七",
                 "age": 10,
                 "address": "北京"
             }

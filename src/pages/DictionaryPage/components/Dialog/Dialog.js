@@ -1,70 +1,82 @@
-import { Modal, Button, Input } from 'antd';
-import React from 'react';
+import { Modal, Button, Input, message } from 'antd';
+import React, { useEffect } from 'react';
 import data from '../../data.json';
+import axios from 'axios';
 
 const Dialog = (props) => {
   const [visible, setVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
-  const [parentsEle, setParentsEle] = React.useState('Content of the modal');
+  const [parentsEle, setParentsEle] = React.useState( [] );
   const [addData, setAddData] = React.useState({
-    "level": '1',
-    "name": "",
-    "age": '',
-    "address": "",
-    "key": "-1",
-    "values":[]
+    "desc_": '',
+    "dictKey": '',
+    "dictName": '',
+    "dictPointType": '',
+    "dictType": '',
+    "level": '',
+    "orgCode": ''
   });
   const [ trackArr, setTrackArr ] = React.useState( [] );
+  const [ keyc, setKeyc ] = React.useState( "" );
 
   const showModal = () => {
-    console.log('新增轨迹',window.track)
     var parentsDom = [];
     let newTrackArr = [];
     let newAddData = JSON.parse(JSON.stringify(addData));
-    if(window.track.length != 0){
+    if(window.track.length !== 0){
       window.track.map((item,key)=>{
-        const lvCount = item.level == 0? "一" : item.level == 1? "二" :item.level == 2? "三" :item.level == 3? "四" : item.level == 4? "五" : parseInt(item.level)+1;
+        const lvCount = item.level === 0? "一" : item.level === 1? "二" :item.level === 2? "三" :item.level === 3? "四" : item.level === 4? "五" : parseInt(item.level)+1;
         parentsDom.push(<p key={key}>{lvCount}级名称:{item.name}</p>)
         newTrackArr.push(item.index);
       })
     }
     setParentsEle(parentsDom)
     setTrackArr(newTrackArr)
-    addData.level = window.track.length;
+    newAddData.level = window.track.length;
+    newAddData.key = new Date().getTime();
     setAddData(newAddData);
     setVisible(true);
   };
 
+  useEffect(() =>{
+    const kc = new Date().getTime();
+    setKeyc(kc)
+  },[visible])
+
   const handleOk = () => {
-    setParentsEle('The modal will be closed after two seconds');
-    console.log(addData,789)
-    console.log(trackArr,999)
+    console.log(addData)
+    console.log(typeof addData)
+
+    axios.post('http://192.168.43.254:8099/dict/addDict', {
+      ...addData
+    }).then((res) => {
+      console.log('res', res)
+      if(res.status === 0) {
+        message.info('新增成功');
+      }
+    }).catch(function (error) {
+      console.log(error);
+    });
+
     let parentData = data;
     if(trackArr.length === 0){
       data.push(addData)
     }else{
       trackArr.forEach((item,index)=>{
-        console.log(item,index)
-        if(index == 0){
+        if(index === 0){
           parentData = parentData[item];
         }else if(index < trackArr.length){
           parentData = parentData.values[item]
         }
       })
+      if(!parentData.values) parentData.values = [];
       parentData.values.push(addData);
-      window.parentDataValue = parentData.values;
-      window.parentData = parentData;
     }
     props.addHandle(data,trackArr);
+    setVisible(false);
+    setConfirmLoading(false);
 
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-    }, 2000);
   };
-
-
 
   const handleCancel = () => {
     console.log('Clicked cancel button');
@@ -72,7 +84,6 @@ const Dialog = (props) => {
   };
 
   const setValue = ( e, item ) =>{
-    console.log(e.target.value,item,213123)
     addData[item] = e.target.value;
     setAddData(addData);
   }
@@ -83,6 +94,7 @@ const Dialog = (props) => {
         新增
       </Button>
       <Modal
+        key = {keyc}
         title="新增"
         visible={visible}
         onOk={handleOk}
@@ -92,11 +104,13 @@ const Dialog = (props) => {
         onCancel={handleCancel}
       >
         <div>
-          {parentsEle}
-          <hr/>
+          { parentsEle.length > 0 ? 
+            <div style={{borderBottom: '1px solid #d9d9d9', marginBottom: 20, padding: 5}}>
+              {parentsEle}
+            </div>: "" }
           {
             Object.keys(addData).map(( item, index )=>{
-              if(item != 'level' && item != 'values' && item != 'key'){
+              if(item !== 'values'){
                 return (
                   <p key={index} style={{display: "flex",flexDirection: "row", flexWrap: "nowrap", justifyContent: "flex-start"}}>
                     <span style={{width:100}}>{ item }：</span>
