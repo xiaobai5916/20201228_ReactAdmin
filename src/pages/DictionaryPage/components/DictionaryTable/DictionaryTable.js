@@ -1,9 +1,5 @@
 import React from 'react';
-import { 
-    Table, 
-    Space, 
-    Button
-} from 'antd';
+import { Table } from 'antd';
 // import axios from 'axios';
 
 class DictionaryTable extends React.Component {
@@ -11,28 +7,18 @@ class DictionaryTable extends React.Component {
     tableFlag: this.props.tableFlag,
     values: [],
     columns: [
-      { title: '字典名称', dataIndex: 'dictName', key: 'dictName' },
-      { title: '字典key', dataIndex: 'dictKey', key: 'dictKey' },
-      { 
-        title: '操作', 
-        key: 'operation', 
-        render: (record) => (
-          <Space size="middle">
-            <Button type="danger" onClick={event => {this.del(event, record)}}>
-              删除
-            </Button>
-            <Button onClick={event => {this.edit(event, record)}}>
-              编辑
-            </Button>
-          </Space>
-        ),
-      }
+      { width: 150, title: '字典key', dataIndex: 'dictKey', key: 'dictKey' },
+      { width: 150, title: '字典名称', dataIndex: 'dictName', key: 'dictName' },
+      { width: 150, title: '上级字典名称', dataIndex: 'prevdictName', key: 'prevdictName' },
+      { width: 100, title: '排序', dataIndex: 'order', key: 'order' },
+      { width: 150, title: '字典描述', dataIndex: 'desc_', key: 'desc_' },
+      { width: 150, title: '机构编码', dataIndex: 'orgCode', key: 'orgCode' },
     ],
     dataBackUp:'',
     idx:[]
   }
 
-  del = (e, data) => {
+  add = (e, data) => {
     e.stopPropagation();
     console.log(e, data)
   }
@@ -42,11 +28,13 @@ class DictionaryTable extends React.Component {
     console.log(e, data)
   }
 
-  showTotal = (total) => {
-    return `共 ${total} 条`;
+  del = (e, data) => {
+    e.stopPropagation();
+    console.log(e, data)
   }
 
   tableDisplay = (data, index) => {
+    console.log('table', data)
     localStorage.setItem('level', data.level)
     let idx = [];
     for(let i = 0; i< window.track.length; i++){
@@ -56,28 +44,38 @@ class DictionaryTable extends React.Component {
         i--;
       }
     }
-    window.track.push({level: data.level, name: data.name, index});
+    window.track.push({level: data.level, name: data.dictName, index});
     for(var i = 0;i<window.track.length;i++){
       idx.push(window.track[i].index);
     }
-    this.setState({ idx })
+    this.setState({ idx })  
     if(data.values && data.values.length > 0 ) {
       this.setState({
         level: data.level,
         values: data.values,
-        tableFlag: true
+        tableFlag: true,
+        currentData: data
       })
     }else{
       this.setState({
         level: data.level,
         values: [],
-        tableFlag: false
+        tableFlag: false,
+        currentData: data
       })
     }
   }
 
   doubleClickClose = () => {
     this.setState({ tableFlag: false })
+  }
+
+  onShowSizeChange = (current, pageSize) => {
+    console.log(current, pageSize);
+  }
+
+  onChange = (page) => {
+    console.log(page);
   }
 
   componentDidMount(){
@@ -114,11 +112,17 @@ class DictionaryTable extends React.Component {
           }}
           columns={this.state.columns} 
           dataSource={values} 
-          pagination={{ 
-            position: ['none', 'bottomRight'], 
+          pagination={{
+            size: 'small',
+            showSizeChanger: true,
+            pageSizeOptions: ['10', '20', '50', '100'],
+            showQuickJumper: true,
+            onShowSizeChange: this.onShowSizeChange,
+            onChange: this.onChange,
+            position: ['none', 'bottomLeft'],
             defaultCurrent: 1,
             defaultPageSize: 10,
-            showTotal: this.showTotal
+            showTotal: total => `共 ${total} 条`
           }} 
         /> 
         {

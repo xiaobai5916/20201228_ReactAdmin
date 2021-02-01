@@ -1,32 +1,36 @@
-import { Modal, Button, Input, message } from 'antd';
 import React, { useEffect } from 'react';
-import data from '../../data.json';
+import { Modal, Button, Input, message } from 'antd';
 import axios from 'axios';
+
+import './Dialog.css'
+import data from '../../data.json';
 
 const Dialog = (props) => {
   const [visible, setVisible] = React.useState(false);
+  const [titleType, seTtitleType] = React.useState(null);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
   const [parentsEle, setParentsEle] = React.useState( [] );
   const [addData, setAddData] = React.useState({
-    "desc_": '',
     "dictKey": '',
     "dictName": '',
-    "dictPointType": '',
     "dictType": '',
-    "level": '',
+    "desc_": '',
     "orgCode": ''
   });
   const [ trackArr, setTrackArr ] = React.useState( [] );
   const [ keyc, setKeyc ] = React.useState( "" );
 
-  const showModal = () => {
+  const addModal = () => {
+    console.log('addModal')
+    seTtitleType('add')
     var parentsDom = [];
     let newTrackArr = [];
     let newAddData = JSON.parse(JSON.stringify(addData));
     if(window.track.length !== 0){
       window.track.map((item,key)=>{
+        console.log(item)
         const lvCount = item.level === 0? "一" : item.level === 1? "二" :item.level === 2? "三" :item.level === 3? "四" : item.level === 4? "五" : parseInt(item.level)+1;
-        parentsDom.push(<p key={key}>{lvCount}级名称:{item.name}</p>)
+        parentsDom.push(<p key={key}>{lvCount}级名称：{item.name}</p>)
         newTrackArr.push(item.index);
       })
     }
@@ -37,6 +41,16 @@ const Dialog = (props) => {
     setAddData(newAddData);
     setVisible(true);
   };
+
+  const editModal = () => {
+    console.log('elitModal')
+    seTtitleType('edit')
+    setVisible(true);
+  }
+  const deleModal = () => {
+    console.log('deleModal')
+    console.log(props.currentData)
+  }
 
   useEffect(() =>{
     const kc = new Date().getTime();
@@ -75,7 +89,7 @@ const Dialog = (props) => {
     props.addHandle(data,trackArr);
     setVisible(false);
     setConfirmLoading(false);
-
+    props.getDictList()
   };
 
   const handleCancel = () => {
@@ -89,13 +103,22 @@ const Dialog = (props) => {
   }
 
   return (
-    <div>
-      <Button type="primary" onClick={showModal}>
+    <div className="dialog-btn">
+      <Button type="primary" onClick={addModal}>
         新增
+      </Button>
+      <Button type="primary" onClick={editModal}>
+        编辑
+      </Button>
+      <Button type="primary" onClick={deleModal}>
+        删除
+      </Button>
+      <Button type="primary" onClick={deleModal}>
+        初始化字典类型
       </Button>
       <Modal
         key = {keyc}
-        title="新增"
+        title={titleType === 'add' ? '新增':'编辑'}
         visible={visible}
         onOk={handleOk}
         confirmLoading={confirmLoading}
@@ -110,7 +133,7 @@ const Dialog = (props) => {
             </div>: "" }
           {
             Object.keys(addData).map(( item, index )=>{
-              if(item !== 'values'){
+              if(item !== 'values' && item !== 'key' && item !== 'level'){
                 return (
                   <p key={index} style={{display: "flex",flexDirection: "row", flexWrap: "nowrap", justifyContent: "flex-start"}}>
                     <span style={{width:100}}>{ item }：</span>

@@ -1,145 +1,188 @@
 [
     {
         "level": 0,
-        "dictKey": "1",
-        "dictName": "交易类",
-        "dictPointType": "苹果",
-        "dictType": "10.3.4.5654",
-        "desc_": "我是苹果苹果苹果",
-        "orgCode": "001",
+        "dictKey": "common_point",
+        "dictName": "通用积分",
+        "dictType": "规则类",
+        "order": 1,
+        "desc_": "通用积分规则父类",
+        "orgCode": "8881",
         "values": [
             {
                 "level": 1,
-                "dictKey": "10",
-                "dictName": "小明",
-                "age": 18,
-                "address": "江西",
+                "dictKey": "deposit",
+                "dictName": "存款类",
+                "prevdictName": "通用积分",
+                "order": 1,
+                "desc_": "通用性行社存款规则字典",
+                "orgCode": "88811",
                 "values": [
                     {
                         "level": 2,
-                        "dictKey": "11",
-                        "dictName": "小黑",
-                        "age": 22,
-                        "address": "黑龙江",
-                        "values": [
-                            {
-                                "level": 3,
-                                "dictKey": "13",
-                                "dictName": "隔壁老王",
-                                "age": 28,
-                                "address": "江西",
-                                "values": [
-                                    {
-                                        "level": 4,
-                                        "dictKey": "14",
-                                        "dictName": "我是第五级",
-                                        "age": 555,
-                                        "address": "余杭",
-                                        "values": [
-                                            {
-                                                "level": 5,
-                                                "dictKey": "15",
-                                                "dictName": "我是六级",
-                                                "age": 666,
-                                                "address": "萧山"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
+                        "dictKey": "current_deposit",
+                        "dictName": "活期存款",
+                        "prevdictName": "存款类",
+                        "order": 1,
+                        "desc_": "活期存款规则父类",
+                        "orgCode": "88811"
                     },
                     {
                         "level": 2,
-                        "dictKey": "12",
-                        "dictName": "小白",
-                        "age": 30,
-                        "address": "哈尔滨",
-                        "values": [
-                            {
-                                
-                                "level": 3,
-                                "dictKey": "16",
-                                "dictName": "小白2222",
-                                "age": 28,
-                                "address": "江西"
-                            }
-                        ]
+                        "dictKey": "regularly_deposit",
+                        "dictName": "定期存款",
+                        "prevdictName": "存款类",
+                        "order": 2,
+                        "desc_": "定期存款规则父类",
+                        "orgCode": "88811"
+                    },
+                    {
+                        "level": 2,
+                        "dictKey": "current+regularly_deposit",
+                        "dictName": "活期+定期",
+                        "prevdictName": "存款类",
+                        "order": 3,
+                        "desc_": "活期+定期存款规则父类",
+                        "orgCode": "88811"
                     }
                 ]
             },
             {
                 "level": 1,
-                "dictKey": "9",
-                "dictName": "小红",
-                "age": 20,
-                "address": "浙江"
-            },
-            {
-                "level": 1,
-                "dictKey": "8",
-                "dictName": "小张",
-                "age": 22,
-                "address": "杭州"
-            }
-        ]
-    },
-    {
-        "level": 0,
-        "dictKey": "2",
-        "dictName": "存款类",
-        "dictPointType": "小米",
-        "dictType": "6.3.2312",
-        "desc_": "我是小米小米",
-        "orgCode": "002",
-        "values": [
-            {
-                "level": 1,
-                "dictKey": "7",
-                "dictName": "小李",
-                "age": 24,
-                "address": "广东",
+                "dictKey": "loan",
+                "dictName": "贷款类",
+                "prevdictName": "通用积分",
+                "order": 2,
+                "desc_": "通用性行社贷款规则字典",
+                "orgCode": "88812",
                 "values": [
                     {
                         "level": 2,
-                        "dictKey": "10",
-                        "dictName": "小明",
-                        "age": 18,
-                        "address": "江西"
+                        "dictKey": "loan_business",
+                        "dictName": "贷款业务",
+                        "prevdictName": "贷款类",
+                        "order": 1,
+                        "desc_": "贷款业务规则父类",
+                        "orgCode": "88811"
                     }
                 ]
             },
             {
                 "level": 1,
-                "dictKey": "6",
-                "dictName": "小白",
-                "age": 28,
-                "address": "深圳"
-            },
-            {
-                "level": 1,
-                "dictKey": "5",
-                "dictName": "小刘",
-                "age": 32,
-                "address": "广西"
+                "dictKey": "sign",
+                "dictName": "签约类",
+                "prevdictName": "通用积分",
+                "order": 3,
+                "desc_": "通用性行社签约规则字典",
+                "orgCode": "88813",
+                "values": [
+                    {
+                        "level": 2,
+                        "dictKey": "product_sign",
+                        "dictName": "产品签约",
+                        "prevdictName": "签约类",
+                        "order": 1,
+                        "desc_": "产品签约规则父类",
+                        "orgCode": "88811"
+                    },
+                    {
+                        "level": 2,
+                        "dictKey": "account_opening_activation",
+                        "dictName": "开户激活",
+                        "prevdictName": "签约类",
+                        "order": 1,
+                        "desc_": "开户激活规则父类",
+                        "orgCode": "88811"
+                    }
+                ]
             }
         ]
     },
     {
         "level": 0,
-        "dictKey": "3",
-        "dictName": "贷款类",
-        "dictPointType": "安卓",
-        "dictType": "16.3.2312",
-        "desc_": "我是安卓安卓机",
-        "orgCode": "003",
+        "dictKey": "special_point",
+        "dictName": "特色积分",
+        "dictType": "其他类",
+        "order": 2,
+        "desc_": "特色积分规则父类",
+        "orgCode": "8882",
         "values": [
             {
                 "level": 1,
-                "dictKey": "4",
-                "dictName": "小七",
-                "age": 10,
-                "address": "北京"
+                "dictKey": "green_point",
+                "dictName": "绿色积分",
+                "prevdictName": "特色积分",
+                "order": 1,
+                "desc_": "绿色积分规则父类",
+                "orgCode": "8882",
+                "values": [
+                    {
+                        "level": 2,
+                        "dictKey": "reforest",
+                        "dictName": "绿化积分",
+                        "prevdictName": "绿色积分",
+                        "order": 1,
+                        "desc_": "绿化积分规则父类",
+                        "orgCode": "8882"
+                    },
+                    {
+                        "level": 2,
+                        "dictKey": "riding",
+                        "dictName": "骑行积分",
+                        "prevdictName": "绿色积分",
+                        "order": 2,
+                        "desc_": "骑行积分规则父类",
+                        "orgCode": "8882"
+                    }
+                ]
+            },
+            {
+                "level": 1,
+                "dictKey": "nursing_home",
+                "dictName": "养老积分",
+                "prevdictName": "特色积分",
+                "order": 2,
+                "desc_": "养老积分规则父类",
+                "orgCode": "8882"
+            }
+        ]
+    },
+    {
+        "level": 0,
+        "dictKey": "common_dict_key",
+        "dictName": "字典类型",
+        "dictType": "字典类型",
+        "order": 3,
+        "desc_": "字典类型选择",
+        "orgCode": "8881",
+        "values": [
+            {
+                
+                "level": 1,
+                "dictKey": "rule_type",
+                "dictName": "规则类",
+                "prevdictName": "字典类型",
+                "order": 1,
+                "desc_": "积分规则类归属",
+                "orgCode": "8881"
+            },
+            {
+                
+                "level": 1,
+                "dictKey": "system_tools",
+                "dictName": "系统工具类",
+                "prevdictName": "字典类型",
+                "order": 2,
+                "desc_": "系统工具类归属",
+                "orgCode": "8881"
+            },{
+                
+                "level": 1,
+                "dictKey": "other_type",
+                "dictName": "其他类",
+                "prevdictName": "字典类型",
+                "order": 3,
+                "desc_": "辅助类归属",
+                "orgCode": "8881"
             }
         ]
     }
