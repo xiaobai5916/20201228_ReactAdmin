@@ -3,53 +3,100 @@ import { Modal, Button, Input, message } from 'antd';
 import axios from 'axios';
 
 import './Dialog.css'
-import data from '../../data.json';
+// import data from '../../data.json';
 
 const Dialog = (props) => {
   const [visible, setVisible] = React.useState(false);
   const [titleType, seTtitleType] = React.useState(null);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
   const [parentsEle, setParentsEle] = React.useState( [] );
+  const [addBtnDisabled, setAddBtnDisabled] = React.useState(false);
+  const [editBtnDisabled, setEditBtnDisabled] = React.useState(false);
+  const [delBtnDisabled, setDelBtnDisabled] = React.useState(false);
   const [addData, setAddData] = React.useState({
     "dictKey": '',
     "dictName": '',
-    "dictType": '',
-    "desc_": '',
-    "orgCode": ''
+    "dictDesc": '',
+    "level": '',
+    "orgCode": '',
+    "sortOrder": ''
   });
   const [ trackArr, setTrackArr ] = React.useState( [] );
   const [ keyc, setKeyc ] = React.useState( "" );
 
+  // 设置所有父辈字典名称
+  const parentLevel = () => {
+    console.log('props.currentNode:',props.currentNode)
+    // if(props.currentNode) {
+      var parentsDom = [];
+      let newTrackArr = [];
+      let newAddData = JSON.parse(JSON.stringify(addData));
+      if(window.track.length !== 0){
+        window.track.map((item,key)=>{
+          console.log(item)
+          const lvCount = item.level === 0? "一" : item.level === 1? "二" :item.level === 2? "三" :item.level === 3? "四" : item.level === 4? "五" : parseInt(item.level)+1;
+          parentsDom.push(<p key={key}>{lvCount}级名称：{item.name}</p>)
+          newTrackArr.push(item.index);
+        })
+      }
+      setParentsEle(parentsDom)
+      setTrackArr(newTrackArr)
+      setAddData(newAddData);
+    // }else{
+    //   setParentsEle([])
+    // }
+  }
+
   const addModal = () => {
-    console.log('addModal')
+    setAddBtnDisabled(true)
     seTtitleType('add')
-    var parentsDom = [];
-    let newTrackArr = [];
-    let newAddData = JSON.parse(JSON.stringify(addData));
-    if(window.track.length !== 0){
-      window.track.map((item,key)=>{
-        console.log(item)
-        const lvCount = item.level === 0? "一" : item.level === 1? "二" :item.level === 2? "三" :item.level === 3? "四" : item.level === 4? "五" : parseInt(item.level)+1;
-        parentsDom.push(<p key={key}>{lvCount}级名称：{item.name}</p>)
-        newTrackArr.push(item.index);
-      })
-    }
-    setParentsEle(parentsDom)
-    setTrackArr(newTrackArr)
-    newAddData.level = window.track.length;
-    newAddData.key = new Date().getTime();
-    setAddData(newAddData);
+    setAddData({
+      "dictKey": '',
+      "dictName": '',
+      "dictDesc": '',
+      "level": '',
+      "orgCode": '',
+      "sortOrder": ''
+    })
+    parentLevel()
     setVisible(true);
   };
 
   const editModal = () => {
-    console.log('elitModal')
+    setEditBtnDisabled(true)
     seTtitleType('edit')
+    parentLevel()
+    for (const key in addData) {
+      if (Object.hasOwnProperty.call(addData, key)) {
+        addData[key] = window.currentData[key]
+      }
+    }
+    setAddData(addData)
+    console.log(addData)
     setVisible(true);
   }
+  
   const deleModal = () => {
+    setDelBtnDisabled(true)
     console.log('deleModal')
-    console.log(props.currentData)
+    let {id, level} = window.currentData
+    console.log('window.currentData', window.currentData)
+    axios.delete('http://192.168.43.254:8099/dict/deleteDict', {
+      params: {
+        id: id,
+        level: level
+      }
+    }).then((res) => {
+        console.log('res', res)
+        if(res.data.status === 0) {
+          message.info('删除成功');
+          setDelBtnDisabled(false)
+          props.getDictList();
+        }
+      }).catch(function (error) {
+        console.log(error);
+        setDelBtnDisabled(false)
+      });
   }
 
   useEffect(() =>{
@@ -57,44 +104,94 @@ const Dialog = (props) => {
     setKeyc(kc)
   },[visible])
 
+  // 新增/编辑 ok确认
   const handleOk = () => {
-    console.log(addData)
-    console.log(typeof addData)
-
-    axios.post('http://192.168.43.254:8099/dict/addDict', {
-      ...addData
-    }).then((res) => {
-      console.log('res', res)
-      if(res.status === 0) {
-        message.info('新增成功');
-      }
-    }).catch(function (error) {
-      console.log(error);
-    });
-
-    let parentData = data;
-    if(trackArr.length === 0){
-      data.push(addData)
-    }else{
-      trackArr.forEach((item,index)=>{
-        if(index === 0){
-          parentData = parentData[item];
-        }else if(index < trackArr.length){
-          parentData = parentData.values[item]
+    for (const key in addData) {
+      if (Object.hasOwnProperty.call(addData, key)) {
+        if(addData[key] === '') {
+          return message.info(`${key}不能为空`);
         }
-      })
-      if(!parentData.values) parentData.values = [];
-      parentData.values.push(addData);
+      }
     }
-    props.addHandle(data,trackArr);
-    setVisible(false);
-    setConfirmLoading(false);
-    props.getDictList()
+    if(titleType === 'add') {
+      let {id} = window.currentData
+      let params = {
+        childrenParaentId: id,
+        dictParentId: id,
+        ...addData
+      }
+      let url = '';
+      if(params.level === '0') {
+        url = 'http://192.168.43.254:8099/dict/addDict'
+      }else{
+        url = 'http://192.168.43.254:8099/dict/addDictChild'
+      }
+      console.log('调用新增接口：', url)
+      axios.post(url, params)
+        .then((res) => {
+          console.log('res', res)
+          if(res.data.status === 0) {
+            message.info('新增成功');
+            props.getDictList();
+            setAddBtnDisabled(false);
+            setConfirmLoading(false);
+            setAddData({
+              "dictKey": '',
+              "dictName": '',
+              "dictDesc": '',
+              "level": '',
+              "orgCode": '',
+              "sortOrder": ''
+            })
+            setVisible(false);
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+    }else{
+      let {id} = window.currentData
+      let params = {
+        id: id,
+        ...addData
+      }
+      console.log('调用编辑接口：/dict/editAddDict')
+      axios.put('http://192.168.43.254:8099/dict/editAddDict', params)
+        .then((res) => {
+          console.log('res', res)
+          if(res.data.status === 0) {
+            message.info('编辑成功');
+            props.getDictList();
+            setEditBtnDisabled(false);
+            setConfirmLoading(false);
+            setAddData({
+              "dictKey": '',
+              "dictName": '',
+              "dictDesc": '',
+              "level": '',
+              "orgCode": '',
+              "sortOrder": ''
+            })
+            setVisible(false);
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   const handleCancel = () => {
+    setAddBtnDisabled(false);
+    setEditBtnDisabled(false)
     console.log('Clicked cancel button');
     setVisible(false);
+    setAddData({
+      "dictKey": '',
+      "dictName": '',
+      "dictDesc": '',
+      "level": '',
+      "orgCode": '',
+      "sortOrder": ''
+    })
   };
 
   const setValue = ( e, item ) =>{
@@ -104,17 +201,14 @@ const Dialog = (props) => {
 
   return (
     <div className="dialog-btn">
-      <Button type="primary" onClick={addModal}>
+      <Button type="primary" disabled={addBtnDisabled} onClick={addModal}>
         新增
       </Button>
-      <Button type="primary" onClick={editModal}>
+      <Button type="primary" disabled={editBtnDisabled} onClick={editModal}>
         编辑
       </Button>
-      <Button type="primary" onClick={deleModal}>
+      <Button type="primary" disabled={delBtnDisabled} onClick={deleModal}>
         删除
-      </Button>
-      <Button type="primary" onClick={deleModal}>
-        初始化字典类型
       </Button>
       <Modal
         key = {keyc}
@@ -132,12 +226,34 @@ const Dialog = (props) => {
               {parentsEle}
             </div>: "" }
           {
-            Object.keys(addData).map(( item, index )=>{
-              if(item !== 'values' && item !== 'key' && item !== 'level'){
+            Object.keys(addData).map(( item )=>{
+              if(item !== 'values' && item !== 'key'){
+                // switch(item) {
+                //   case 'dictKey':
+                //     item= '字典key'
+                //     break;
+                //   case 'dictName':
+                //     item= '字典名称'
+                //     break;
+                //   case 'dictDesc':
+                //     item= '字典描述'
+                //     break;
+                //   case 'level':
+                //     item= '级别'
+                //     break;
+                //   case 'orgCode':
+                //     item= '机构编码'
+                //     break;
+                //   case 'sortOrder':
+                //     item= '排序'
+                //     break;
+                //   default:
+                //     break;
+                // }
                 return (
-                  <p key={index} style={{display: "flex",flexDirection: "row", flexWrap: "nowrap", justifyContent: "flex-start"}}>
+                  <p key={item} style={{display: "flex",flexDirection: "row", flexWrap: "nowrap", justifyContent: "flex-start"}}>
                     <span style={{width:100}}>{ item }：</span>
-                    <Input onChange={e=>{setValue(e,item)}}/>
+                    <Input allowClear="true" defaultValue={addData[item] === ''? '': addData[item]} onChange={e=>{setValue(e,item)}}/>
                   </p>
                 )
               }

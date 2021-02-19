@@ -1,0 +1,6 @@
+.clickRowStyl {
+    background: lightslategray;
+}
+.ant-table-tbody>.clickRowStyl:hover>td {
+    background: lightslategray;
+}

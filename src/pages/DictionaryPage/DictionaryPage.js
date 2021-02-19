@@ -3,7 +3,7 @@ import React from 'react';
 // 在需要用到的 组件文件中引入中文语言包
 import zhCN from 'antd/es/locale/zh_CN'; 
 // 引入国际化配置
-import { Table, Select, ConfigProvider  } from 'antd';
+import { Table, Select, ConfigProvider, Button  } from 'antd';
 import axios from 'axios';
 
 import data from './data.json';
@@ -12,7 +12,8 @@ import DictionaryTable from './components/DictionaryTable';
 
 const { Option } = Select;
 
-window.track = [];// 轨迹
+window.track = []; // 轨迹
+window.currentData = {}; // 当前行数据
 class DictionaryPage extends React.Component {
   state = {
     columns: [
@@ -20,56 +21,80 @@ class DictionaryPage extends React.Component {
       { width: 150,title: '字典名称', dataIndex: 'dictName', key: 'dictName' },
       { width: 150,title: '字典类别', dataIndex: 'dictType', key: 'dictType' },
       // { width: 150,title: '积分类别', dataIndex: 'dictPointType', key: 'dictPointType' },
-      { width: 100,title: '排序', dataIndex: 'order', key: 'order' },
-      { width: 150,title: '字典描述', dataIndex: 'desc_', key: 'desc_' },
+      { width: 100,title: '排序', dataIndex: 'sortOrder', key: 'sortOrder' },
+      { width: 150,title: '字典描述', dataIndex: 'dictDesc', key: 'dictDesc' },
       { width: 150,title: '机构编码', dataIndex: 'orgCode', key: 'orgCode' },
     ],
     jsonData: data,
     tableDisplay: false,
     values: [],
-    level: 0,
+    level: '0',
     idx: [0],
     list: [],
     dictValue: '0',
     local: zhCN,
-    currentData: {}
+    currentData: {},
+    loading: false,
+    rowId: '',
+    currentNode: false
   }
 
-  add = (e, data) => {
-    e.stopPropagation();
-    console.log(e, data)
+  // 初始化字典类型
+  getDictList = () => {
+    this.setState({ loading: true });
+    console.log('调用查询接口：/dict/getParentDict')
+    axios.get('http://192.168.43.254:8099/dict/getParentDict?current=1&pageSize=10')
+      .then((res) => {
+        console.log('/dict/getParentDict接口res', res)
+        this.setState({
+          list: res.data.data.list,
+          total: res.data.data.total,
+          tableDisplay: false,
+          loading: false
+        })
+      }).catch(() => {
+        this.setState({loading: false});
+      })
   }
-
-  edit = (e, data) => {
-    e.stopPropagation();
-    console.log(e, data)
-  }
-
-  // del = (e, data) => {
-  //   e.stopPropagation();
-  //   console.log(e, data)
-  // }
 
   // 点击当前行,获取当前行所有信息
   tableDisplay = (data, index) => {
-    console.log('page:', data)
-    localStorage.setItem('level', data.level)
-    window.track = [];
-    window.track.push({level: data.level, name: data.dictName, index});
-    this.setState({idx: JSON.parse(JSON.stringify([index]))})
-    if(data.values && data.values.length > 0) {
-      this.setState({ 
-        level: data.level,
-        tableDisplay: true,
-        values: data.values,
-        currentData: data
+    return () => {
+      let deleteEle = document.querySelectorAll(`tr[class*="clickRowStyl"]`);
+      console.log(deleteEle)
+      deleteEle.forEach(item => {
+        item.classList.remove('clickRowStyl')
       })
-    }else{
-      this.setState({ 
-        level: data.level,
-        tableDisplay: false,
-        values: [],
-        currentData: data
+      console.log('page:', data);
+      localStorage.setItem('level', data.level);
+      // 请求二级字典
+      console.log('调用查询接口：/dict/getChildDict')
+      axios.get(`http://192.168.43.254:8099/dict/getChildDict?current=1&pageSize=10&parentId=${data.id}`)
+      .then(res => {
+        window.track = [];
+        window.currentData = { ...data };
+        window.track.push({level: data.level, name: data.dictName, index});
+        this.setState({idx: JSON.parse(JSON.stringify([index]))})
+        let childData = res.data.data.list;
+        console.log(childData)
+        if(childData && childData.length > 0) {
+          this.setState({ 
+            level: data.level,
+            tableDisplay: true,
+            values: childData,
+            rowId: data.id
+          })
+        }else{
+          this.setState({ 
+            level: data.level,
+            tableDisplay: false,
+            values: [],
+            rowId: data.id
+          })
+        }
+      })
+      .catch(err => {
+        console.log(err)
       })
     }
   }
@@ -91,66 +116,59 @@ class DictionaryPage extends React.Component {
     console.log(page);
   }
 
-  getDictList = () => {
-    console.log('调用查询接口：/dict/getParentDict')
-    axios.get('http://192.168.43.254:8099/dict/getParentDict?current=1&pageSize=10')
-      .then((res) => {
-        console.log('res', res)
-        this.setState({
-          list: res.data.data.list,
-          total: res.data.data.total
-        })
-        console.log('list', this.state.list)
-      })
+  setRowClassName = (record) => {
+    return record.id === this.state.rowId ? 'clickRowStyl' : '';
   }
 
-  componentWillMount() {
-    this.getDictList()
+  handleCurrentNode = (event) => {
+    // let node = event.target.nodeName.toLowerCase();
+    // if(node === 'td') {
+    //   this.setState({currentNode: true})
+    // }else{
+    //   this.setState({currentNode: false})
+    // }
   }
 
   render() {
-    const { columns, local, values, idx, jsonData, level } = this.state
-    console.log(localStorage.getItem('level'))
+    const { columns, local, values, idx, jsonData, level, list, tableDisplay, loading, dictValue } = this.state
     return (
-      <div>
+      <div onClick={this.handleCurrentNode}>
         <div className="clearfix">
           <div className="fl">
             字典类别：
-            <Select defaultValue={this.state.dictValue} style={{ width: 120 }} onChange={this.handleChange}>
+            <Select defaultValue={dictValue} style={{ width: 120 }} onChange={this.handleChange}>
               <Option value="0">规则类</Option>
               <Option value="1">系统工具类</Option>
               <Option value="2">其他类</Option>
             </Select>
           </div>
+          <div className="fr">
+            <Button type="primary" onClick={this.getDictList}>
+              初始化字典类型
+            </Button>
+          </div>
           <div className="fr" style={{ marginBottom: '16px' }}>
-            <Dialog 
-              currentData={this.state.currentData}
+            <Dialog
               getDictList={this.getDictList}
-              addHandle = {(data)=>{
-                const newData = JSON.parse(JSON.stringify(data))
-                let newValues = data[this.state.idx[0]].values.slice()
-                this.setState({ data: newData, values: newValues })
-              }}
+              currentNode={this.state.currentNode}
             />
           </div>
         </div>
         <ConfigProvider locale={local}>
           <Table
-            rowKey={record => record.dictKey}
+            rowKey={record => record.id}
             onRow={(record, index) => {
               return {
-                onClick: this.tableDisplay.bind(this, record, index), // 点击行,获取当前行所有信息
+                onClick: this.tableDisplay(record, index), // 点击行,获取当前行所有信息
                 onDoubleClick: this.doubleClickClose,  // 双击行，关闭二级菜单
-                // onContextMenu: event => {},
-                // onMouseEnter: event => {}, // 鼠标移入行
-                // onMouseLeave: event => {},
               };
             }}
+            rowClassName={this.setRowClassName}
             className="components-table-demo-nested"
             showHeader="false"
             columns={columns}
-            selections={false}
-            dataSource={jsonData}
+            dataSource={list}
+            loading={loading}
             pagination={{ 
               size: 'small',
               showSizeChanger: true,
@@ -164,12 +182,12 @@ class DictionaryPage extends React.Component {
               showTotal: total => `共 ${total} 条`
             }}
           />
+          {
+            tableDisplay ? (
+              <DictionaryTable values={values} idx={idx} data={jsonData} level={level} />
+            ) : null
+          }
         </ConfigProvider>
-        {
-          this.state.tableDisplay ? (
-            <DictionaryTable values={values} idx={idx} data={jsonData} level={level} />
-          ) : null
-        }
       </div>
     );
   }

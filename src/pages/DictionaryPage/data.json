@@ -156,7 +156,6 @@
         "orgCode": "8881",
         "values": [
             {
-                
                 "level": 1,
                 "dictKey": "rule_type",
                 "dictName": "规则类",
@@ -166,7 +165,6 @@
                 "orgCode": "8881"
             },
             {
-                
                 "level": 1,
                 "dictKey": "system_tools",
                 "dictName": "系统工具类",
@@ -175,7 +173,6 @@
                 "desc_": "系统工具类归属",
                 "orgCode": "8881"
             },{
-                
                 "level": 1,
                 "dictKey": "other_type",
                 "dictName": "其他类",
